@@ -75,6 +75,19 @@ Future<void> main() async {
     Utils.showLog("Notification Init Error: $e");
   }
 
+  // Initialize Branch and fetch latest referring params (referral)
+  try {
+    await onInitializeBranchIo();
+    final params = await FlutterBranchSdk.getLatestReferringParams();
+    final refCode = (params?["refCode"] ?? params?["+referrer"] ?? "").toString();
+    if (refCode.isNotEmpty) {
+      await Database.setPendingReferralCode(refCode);
+      Utils.showLog("Captured referral code: $refCode");
+    }
+  } catch (e) {
+    Utils.showLog("Branch init error: $e");
+  }
+
   runApp(const MyApp());
 }
 

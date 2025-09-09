@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:Wow/services/referral_service.dart';
 import 'package:Wow/pages/login_page/api/check_user_exist_api.dart';
 import 'package:Wow/ui/loading_ui.dart';
 import 'package:Wow/pages/splash_screen_page/api/fetch_login_user_profile_api.dart';
@@ -207,9 +208,24 @@ class LoginController extends GetxController {
 
     if (fetchLoginUserProfileModel?.user?.id != null && fetchLoginUserProfileModel?.user?.loginType != null) {
       Database.onSetIsNewUser(false);
-      Database.onSetLoginUserId(fetchLoginUserProfileModel!.user!.id!);
       Database.onSetLoginType(int.parse((fetchLoginUserProfileModel?.user?.loginType ?? 0).toString()));
       Database.fetchLoginUserProfileModel = fetchLoginUserProfileModel;
+      Database.onSetLoginUserId(fetchLoginUserProfileModel!.user!.id!);
+
+      // Auto-redeem pending referral if present
+      try {
+        final pending = Database.pendingReferralCode;
+        if (pending.isNotEmpty) {
+          final ok = await ReferralService.instance.redeemCode(
+            referredUserId: fetchLoginUserProfileModel!.user!.id!,
+            code: pending,
+          );
+          Utils.showLog("Referral auto-redeem: $ok");
+          await Database.clearPendingReferralCode();
+        }
+      } catch (e) {
+        Utils.showLog("Referral auto-redeem error: $e");
+      }
 
     /*  if (fetchLoginUserProfileModel?.user?.country == "" || fetchLoginUserProfileModel?.user?.bio == "") {
         Get.toNamed(AppRoutes.fillProfilePage);

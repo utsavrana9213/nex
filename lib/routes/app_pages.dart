@@ -91,6 +91,12 @@ import 'package:Wow/pages/verification_request_page/binding/verification_request
 import 'package:Wow/pages/verification_request_page/view/verification_request_view.dart';
 import 'package:Wow/pages/withdraw_page/binding/withdraw_binding.dart';
 import 'package:Wow/pages/withdraw_page/view/withdraw_view.dart';
+import 'package:Wow/pages/polls_page/binding/polls_binding.dart';
+import 'package:Wow/pages/polls_page/view/polls_view.dart';
+import 'package:Wow/pages/create_poll_page/binding/create_poll_binding.dart';
+import 'package:Wow/pages/create_poll_page/view/create_poll_view.dart';
+import 'package:Wow/pages/referral_page/binding/referral_binding.dart';
+import 'package:Wow/pages/referral_page/view/referral_view.dart';
 
 import 'app_routes.dart';
 
@@ -355,6 +361,25 @@ class AppPages {
       name: AppRoutes.audioWiseVideosPage,
       page: () => const AudioWiseVideosView(),
       binding: AudioWiseVideosBinding(),
+    ),
+
+    // >>>>> >>>>> >>>>> Poll Pages <<<<< <<<<< <<<<<
+    GetPage(
+      name: AppRoutes.pollsPage,
+      page: () => const PollsView(),
+      binding: PollsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.createPollPage,
+      page: () => const CreatePollView(),
+      binding: CreatePollBinding(),
+    ),
+
+    // >>>>> >>>>> >>>>> Referral Pages <<<<< <<<<< <<<<<
+    GetPage(
+      name: AppRoutes.referralPage,
+      page: () => const ReferralView(),
+      binding: ReferralBinding(),
     ),
   ];
 }

@@ -75,6 +75,11 @@ class Database {
 
   static onSetIsPurchase(bool isPurchase) async => await localStorage.write("isPurchase", isPurchase);
 
+  // >>>>> >>>>> Pending Referral Code <<<<< <<<<<
+  static String get pendingReferralCode => localStorage.read("pendingReferralCode") ?? "";
+  static Future<void> setPendingReferralCode(String code) async => localStorage.write("pendingReferralCode", code);
+  static Future<void> clearPendingReferralCode() async => localStorage.remove("pendingReferralCode");
+
   // >>>>> >>>>> Log Out User Database <<<<< <<<<<
 
   static Future<void> onLogOut() async {

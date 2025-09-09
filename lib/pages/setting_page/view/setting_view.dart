@@ -151,6 +151,20 @@ class SettingView extends GetView<SettingController> {
                     ),
                     ItemsView(
                       icon: AppAsset.icHelp,
+                      title: 'Polls',
+                      callback: () {
+                        Get.toNamed(AppRoutes.pollsPage);
+                      },
+                    ),
+                    ItemsView(
+                      icon: AppAsset.icHelp,
+                      title: 'Referral',
+                      callback: () {
+                        Get.toNamed(AppRoutes.referralPage);
+                      },
+                    ),
+                    ItemsView(
+                      icon: AppAsset.icHelp,
                       title: EnumLocal.txtHelp.name.tr,
                       callback: () {
                         Get.toNamed(AppRoutes.helpPage);

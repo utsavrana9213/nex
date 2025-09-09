@@ -79,4 +79,11 @@ class AppRoutes {
 // >>>>> >>>>> >>>>> Fake Live Pages <<<<< <<<<< <<<<<
   static const String fakeLivePage = '/fake_live_page';
   static const String audioWiseVideosPage = '/audio_wise_videos_page';
+
+  // >>>>> >>>>> >>>>> Poll Pages <<<<< <<<<< <<<<<
+  static const String pollsPage = '/polls_page';
+  static const String createPollPage = '/create_poll_page';
+
+  // >>>>> >>>>> >>>>> Referral Pages <<<<< <<<<< <<<<<
+  static const String referralPage = '/referral_page';
 }

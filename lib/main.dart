@@ -25,6 +25,7 @@ import 'package:Wow/utils/internet_connection.dart';
 import 'package:Wow/utils/notification_services.dart';
 import 'package:Wow/utils/platform_device_id.dart';
 import 'package:Wow/utils/utils.dart';
+import 'package:Wow/services/admob_service.dart';
 
 List<CameraDescription> _cameras = <CameraDescription>[];
 
@@ -73,6 +74,14 @@ Future<void> main() async {
         NotificationServices.onShowBackgroundNotification);
   } catch (e) {
     Utils.showLog("Notification Init Error: $e");
+  }
+
+  // Initialize AdMob
+  try {
+    await AdMobService.instance.initialize();
+    AdMobService.instance.loadInterstitialAd();
+  } catch (e) {
+    Utils.showLog("AdMob Init Error: $e");
   }
 
   // Initialize Branch and fetch latest referring params (referral)

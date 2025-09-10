@@ -17,6 +17,7 @@ import 'package:Wow/utils/enums.dart';
 import 'package:Wow/utils/font_style.dart';
 import 'package:Wow/pages/setting_page/widget/setting_widget.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:Wow/ui/banner_ad_widget.dart';
 
 class SettingView extends GetView<SettingController> {
   const SettingView({super.key});
@@ -189,6 +190,9 @@ class SettingView extends GetView<SettingController> {
                       title: EnumLocal.txtLogOut.name.tr,
                       callback: () => LogoutUserDialogUi.onShow(),
                     ),
+                    15.height,
+                    // Banner Ad
+                    const Center(child: BannerAdWidget()),
                     15.height,
                   ],
                 ),

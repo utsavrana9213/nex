@@ -55,6 +55,7 @@ dependencies:
   qr_flutter:
   permission_handler: ^11.3.1
   mobile_scanner: ^7.0.1
+  google_mobile_ads: ^5.1.0
   # ✅ Latest with Flutter v2+ embedding only
 #  mobile_scanner: ^6.0.3      # ✅ Stable release that avoids Kotlin/data bugs
   date_picker_plus:
@@ -76,8 +77,10 @@ dependencies:
   loading_animation_widget:
   sign_in_with_apple:
   change_app_package_name:
+  zego_uikit_prebuilt_call: ^4.17.13
 
   curved_labeled_gradient_navigation_bar: ^2.0.13
+#  google_mobile_ads: any
 
 dependency_overrides:
   path:

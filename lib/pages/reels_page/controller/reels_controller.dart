@@ -4,6 +4,7 @@ import 'package:Wow/pages/reels_page/api/fetch_reels_api.dart';
 import 'package:Wow/pages/reels_page/model/fetch_reels_model.dart';
 import 'package:Wow/utils/branch_io_services.dart';
 import 'package:Wow/utils/database.dart';
+import 'package:Wow/services/admob_service.dart';
 
 class ReelsController extends GetxController {
   PreloadPageController preloadPageController = PreloadPageController();
@@ -42,6 +43,9 @@ class ReelsController extends GetxController {
   void onChangePage(int index) async {
     currentPageIndex = index;
     update(["onChangePage"]);
+    
+    // Trigger ad on scroll
+    AdMobService.instance.onReelScrolled();
   }
 
   Future<void> onGetReels() async {

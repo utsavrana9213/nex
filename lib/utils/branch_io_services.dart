@@ -71,6 +71,16 @@ class BranchIoServices {
               Utils.showLog("Login user id is same");
             }
           }
+          // Capture referral code if present in link
+          try {
+            final dynamic ref = (data['refCode'] ?? data['+referrer']);
+            final String refCode = ref == null ? '' : ref.toString();
+            if (refCode.isNotEmpty) {
+              await Database.setPendingReferralCode(refCode);
+              Utils.showLog("Captured referral code from Branch: $refCode");
+            }
+          } catch (_) {}
+
           print('TYPE :: ${BranchIoServices.eventType}');
           if (BranchIoServices.eventType == "Live") {
             print("Database.loginUserId == BranchIoServices.eventUserId ${BranchIoServices.eventType}");

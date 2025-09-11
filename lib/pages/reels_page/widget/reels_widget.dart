@@ -26,6 +26,7 @@ import 'package:Wow/ui/send_gift_on_video_bottom_sheet_ui.dart';
 import 'package:Wow/ui/video_picker_bottom_sheet_ui.dart';
 import 'package:Wow/utils/api.dart';
 import 'package:Wow/utils/asset.dart';
+import 'package:Wow/services/download_service.dart';
 import 'package:Wow/utils/branch_io_services.dart';
 import 'package:Wow/utils/color.dart';
 import 'package:Wow/utils/constant.dart';
@@ -211,6 +212,18 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
         ShareParams(text:  "${Api.baseUrl}${controller.mainReels[widget.index].videoUrl}")
     );
     await ReelsShareApi.callApi(loginUserId: Database.loginUserId, videoId: controller.mainReels[widget.index].id!);
+  }
+
+  Future<void> onClickDownload() async {
+    try {
+      final id = controller.mainReels[widget.index].id ?? "";
+      if (id.isEmpty) return;
+      final res = await DownloadService.instance.downloadReel(id: id);
+      Utils.showLog("Download response: $res");
+      Utils.showToast(EnumLocal.txtDownloadSuccess.name.tr);
+    } catch (e) {
+      Utils.showLog("download failed: $e");
+    }
   }
 
   Future<void> onClickLike() async {
@@ -716,6 +729,17 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                         CustomFormatNumber.convert(customChanges["like"]),
                         style: AppFontStyle.styleW700(AppColor.white, 14),
                       ),
+                    ),
+                    12.height,
+                    CustomIconButton(
+                      icon: AppAsset.icDownload,
+                      circleSize: 34,
+                      iconSize: 28,
+                      callback: onClickDownload,
+                    ),
+                    Text(
+                      "",
+                      style: AppFontStyle.styleW700(AppColor.white, 14),
                     ),
                     CustomIconButton(
                       circleSize: 48,

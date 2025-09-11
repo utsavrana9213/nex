@@ -5,6 +5,7 @@ class PollModel {
   final List<int> votes;
   final DateTime createdAt;
   final DateTime? expiresAt;
+  final String createdBy;
 
   const PollModel({
     required this.id,
@@ -13,6 +14,7 @@ class PollModel {
     required this.votes,
     required this.createdAt,
     required this.expiresAt,
+    this.createdBy = '',
   });
 
   int get totalVotes => votes.fold(0, (sum, v) => sum + v);
@@ -29,6 +31,7 @@ class PollModel {
       expiresAt: (map['expiresAt'] is int && map['expiresAt'] > 0)
           ? DateTime.fromMillisecondsSinceEpoch(map['expiresAt'])
           : null,
+      createdBy: (map['createdBy'] ?? '') as String,
     );
   }
 
@@ -39,6 +42,7 @@ class PollModel {
       'votes': votes,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'expiresAt': expiresAt?.millisecondsSinceEpoch,
+      'createdBy': createdBy,
     };
   }
 }

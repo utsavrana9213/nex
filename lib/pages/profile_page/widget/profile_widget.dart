@@ -17,7 +17,12 @@ import 'package:Wow/utils/asset.dart';
 import 'package:Wow/utils/color.dart';
 import 'package:Wow/utils/database.dart';
 import 'package:Wow/utils/font_style.dart';
+import 'package:Wow/services/poll_service.dart';
+import 'package:Wow/pages/polls_page/model/poll_model.dart';
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
+import 'package:Wow/pages/polls_page/view/polls_view.dart';
+
+import '../../polls_page/controller/polls_controller.dart';
 
 class ProfileAppBarUi extends StatelessWidget {
   const ProfileAppBarUi({super.key});
@@ -404,5 +409,253 @@ class CollectionsTabView extends StatelessWidget {
                   },
                 ),
     );
+  }
+}
+
+class ProfilePollsTabView extends StatefulWidget {
+  const ProfilePollsTabView({super.key});
+
+  @override
+  State<ProfilePollsTabView> createState() => _ProfilePollsTabViewState();
+}
+
+class _ProfilePollsTabViewState extends State<ProfilePollsTabView> {
+  List<PollModel> polls = const <PollModel>[];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() => isLoading = true);
+    final all = await PollService.instance.fetchActivePolls();
+    final mine = all.where((p) => p.createdBy == Database.loginUserId).toList();
+    setState(() {
+      polls = mine;
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (polls.isEmpty) {
+      return Center(
+        child: Text(
+          'No polls yet',
+          style: AppFontStyle.styleW600(Colors.grey.shade700, 14),
+        ),
+      );
+    }
+    return RefreshIndicator(
+      onRefresh: _load,
+      child: ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        itemBuilder: (context, index) {
+          final poll = polls[index];
+          final isExpired = poll.isExpired;
+          return Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4)),
+              ],
+            ),
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(poll.question, style: AppFontStyle.styleW700(AppColor.colorDarkBlue, 16)),
+                const SizedBox(height: 10),
+                ...List.generate(poll.options.length, (i) {
+                  final option = poll.options[i];
+                  final optionVotes = poll.votes.length > i ? poll.votes[i] : 0;
+                  final total = poll.totalVotes == 0 ? 1 : poll.totalVotes;
+                  final percent = optionVotes / total;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(child: Text(option, style: AppFontStyle.styleW500(AppColor.colorDarkBlue, 14))),
+                            Text('${(percent * 100).toStringAsFixed(0)}%'),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: LinearProgressIndicator(
+                            value: percent,
+                            minHeight: 8,
+                            backgroundColor: Colors.grey.withOpacity(0.25),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(isExpired ? Icons.lock_clock : Icons.timer, size: 16, color: Colors.grey.shade600),
+                    const SizedBox(width: 6),
+                    Text(isExpired ? 'Expired' : 'Active', style: AppFontStyle.styleW500(Colors.grey.shade700, 12)),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemCount: polls.length,
+      ),
+    );
+  }
+}
+
+class EmbeddedPollsTab extends StatefulWidget {
+  const EmbeddedPollsTab({super.key});
+
+  @override
+  State<EmbeddedPollsTab> createState() => _EmbeddedPollsTabState();
+}
+
+class _EmbeddedPollsTabState extends State<EmbeddedPollsTab> {
+  late final PollsController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!Get.isRegistered<PollsController>()) {
+      controller = Get.put(PollsController());
+    } else {
+      controller = Get.find<PollsController>();
+    }
+    // Ensure fresh data
+    controller.fetchPolls();
+  }
+
+  Future<void> _onRefresh() async {
+    await controller.fetchPolls();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      return RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: controller.polls.isEmpty
+            ? ListView(
+                primary: false,
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                children: const [
+                  SizedBox(height: 120),
+                  Center(
+                    child: Text(
+                      'No polls yet',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              )
+            : ListView.separated(
+                primary: false,
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                itemCount: controller.polls.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final poll = controller.polls[index];
+                  final isExpired = poll.isExpired;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4)),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(poll.question, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                        const SizedBox(height: 10),
+                        ...List.generate(poll.options.length, (i) {
+                          final option = poll.options[i];
+                          final optionVotes = poll.votes.length > i ? poll.votes[i] : 0;
+                          final total = poll.totalVotes == 0 ? 1 : poll.totalVotes;
+                          final percent = optionVotes / total;
+                          final percentText = ((percent * 100).toStringAsFixed(0)) + '%';
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: isExpired ? null : () => controller.vote(poll.id, i),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(option, style: const TextStyle(fontWeight: FontWeight.w600)),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(percentText, style: const TextStyle(fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: LinearProgressIndicator(
+                                        value: percent,
+                                        minHeight: 8,
+                                        backgroundColor: Colors.black.withOpacity(0.08),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            const Icon(Icons.how_to_vote, size: 16),
+                            const SizedBox(width: 6),
+                            Text('${poll.totalVotes} votes', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[700])),
+                            const Spacer(),
+                            Icon(isExpired ? Icons.lock_clock : Icons.timer, size: 16),
+                            const SizedBox(width: 6),
+                            Text(isExpired ? 'Expired' : 'Active'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+      );
+    });
   }
 }

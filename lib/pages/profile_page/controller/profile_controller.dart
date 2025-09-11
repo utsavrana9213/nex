@@ -63,7 +63,7 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
 
   @override
   Future<void> onInit() async {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
     tabController?.addListener(onChangeTabBar);
     scrollController.addListener(onScroll);
 
@@ -113,6 +113,8 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
         if (isLoadingCollection) {
           onGetCollection(userId: Database.loginUserId);
         }
+      } else if (tabController?.index == 3) {
+        Utils.showLog("Tab Change To Polls => ${tabController?.index}");
       }
     }
   }

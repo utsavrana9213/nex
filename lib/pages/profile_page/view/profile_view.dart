@@ -459,6 +459,10 @@ class ProfileView extends GetView<ProfileController> {
                               icon: const ImageIcon(AssetImage(AppAsset.icCollections), size: 30),
                               text: EnumLocal.txtCollections.name.tr,
                             ),
+                            const Tab(
+                              icon: Icon(Icons.how_to_vote),
+                              text: 'Polls',
+                            ),
                           ],
                         ),
                       ),
@@ -474,6 +478,7 @@ class ProfileView extends GetView<ProfileController> {
                 ReelsTabView(),
                 FeedsTabView(),
                 CollectionsTabView(),
+                EmbeddedPollsTab(),
               ],
             ),
           ),

@@ -1,0 +1,151 @@
+.......................Referral API..........................................
+1.during loginorsignup 
+
+{
+  "loginType": 2,
+  "email": "soruavtestuser@gmail.com",
+  "identity": "google-12345",
+  "fcmToken": "sample-fcm-token-xyz",
+  "referralCode": "28d33d85" //this will add a new input busing during loginorsingup
+}
+
+
+2.get referral code 
+  Get http://localhost:5000//client/referral/generate
+	{
+	   userId:"........"
+	}
+...................................Download Api....................................
+
+3.download reel api.....
+	
+GET http://localhost:5000/downloadVideo/
+
+   
+  body{
+  
+	id:"idlkdj"
+     }
+...............................Poll/Vote Api...........................................
+
+4. create Poll
+ Post http://localhost:5000/client/poll/create
+   body{
+ 	  {
+  "question": "Which filter should we use for this reel?",
+  "options": ["Vintage", "Vibrant", "Mono"],
+  "createdBy": "674ed8627221054259972911",//userId who is creating
+  "expiresAt": "2025-09-20T12:00:00.000Z"
+} 
+ }
+
+
+   response :{{
+  "status": true,
+  "data": {
+    "question": "Which filter should we use for this reel?",
+    "options": [
+      {
+        "text": "Vintage",
+        "votes": 0,
+        "_id": "68c36ffadbadcdf2c3dd337f"
+      },
+      {
+        "text": "Vibrant",
+        "votes": 0,
+        "_id": "68c36ffadbadcdf2c3dd3380"
+      },
+      {
+        "text": "Mono",
+        "votes": 0,
+        "_id": "68c36ffadbadcdf2c3dd3381"
+      }
+    ],
+    "createdBy": "674ed8627221054259972911",
+    "expiresAt": "2025-09-20T12:00:00.000Z",
+    "_id": "68c36ffadbadcdf2c3dd337e",
+    "createdAt": "2025-09-12T00:57:30.824Z",
+    "__v": 0
+  }
+}}
+
+
+
+5.vote on poll
+
+   Post http://localhost:5000/client/poll/vote
+      body {
+  "pollId": "{{POLL_ID}}",
+  "optionIndex": 1,
+  "userId": "{{USER2}}"//who is voiting another user
+}
+
+response:{
+  "status": true,
+  "message": "Vote recorded",
+  "data": {
+    "_id": "68c36ffadbadcdf2c3dd337e",
+    "question": "Which filter should we use for this reel?",
+    "options": [
+      {
+        "text": "Vintage",
+        "votes": 0,
+        "_id": "68c36ffadbadcdf2c3dd337f"
+      },
+      {
+        "text": "Vibrant",
+        "votes": 1,
+        "_id": "68c36ffadbadcdf2c3dd3380"
+      },
+      {
+        "text": "Mono",
+        "votes": 0,
+        "_id": "68c36ffadbadcdf2c3dd3381"
+      }
+    ],
+    "createdBy": "674ed8627221054259972911",
+    "expiresAt": "2025-09-20T12:00:00.000Z",
+    "createdAt": "2025-09-12T00:57:30.824Z",
+    "__v": 0
+  }
+}
+
+6.Poll result 
+ Get http://localhost:5000/client/poll/results
+  body {
+  "pollId": "68c36ffadbadcdf2c3dd337e"
+}
+
+response {
+  "status": true,
+  "data": {
+    "_id": "68c36ffadbadcdf2c3dd337e",
+    "question": "Which filter should we use for this reel?",
+    "options": [
+      {
+        "text": "Vintage",
+        "votes": 0,
+        "_id": "68c36ffadbadcdf2c3dd337f"
+      },
+      {
+        "text": "Vibrant",
+        "votes": 1,
+        "_id": "68c36ffadbadcdf2c3dd3380"
+      },
+      {
+        "text": "Mono",
+        "votes": 0,
+        "_id": "68c36ffadbadcdf2c3dd3381"
+      }
+    ],
+    "createdBy": {
+      "_id": "674ed8627221054259972911",
+      "name": "Royalium",
+      "userName": "@@Felixium"
+    },
+    "expiresAt": "2025-09-20T12:00:00.000Z",
+    "createdAt": "2025-09-12T00:57:30.824Z",
+    "__v": 0
+  }
+}
+  

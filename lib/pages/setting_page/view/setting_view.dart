@@ -165,6 +165,13 @@ class SettingView extends GetView<SettingController> {
                       },
                     ),
                     ItemsView(
+                      icon: AppAsset.icVerificationRequest,
+                      title: 'Premium Subscription',
+                      callback: () {
+                        Get.toNamed(AppRoutes.subscriptionPage);
+                      },
+                    ),
+                    ItemsView(
                       icon: AppAsset.icHelp,
                       title: EnumLocal.txtHelp.name.tr,
                       callback: () {

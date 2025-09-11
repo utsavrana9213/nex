@@ -86,4 +86,7 @@ class AppRoutes {
 
   // >>>>> >>>>> >>>>> Referral Pages <<<<< <<<<< <<<<<
   static const String referralPage = '/referral_page';
+
+  // >>>>> >>>>> >>>>> Subscription Pages <<<<< <<<<< <<<<<
+  static const String subscriptionPage = '/subscription_page';
 }

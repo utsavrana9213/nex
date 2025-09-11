@@ -97,6 +97,8 @@ import 'package:Wow/pages/create_poll_page/binding/create_poll_binding.dart';
 import 'package:Wow/pages/create_poll_page/view/create_poll_view.dart';
 import 'package:Wow/pages/referral_page/binding/referral_binding.dart';
 import 'package:Wow/pages/referral_page/view/referral_view.dart';
+import 'package:Wow/pages/subscription_page/binding/subscription_binding.dart';
+import 'package:Wow/pages/subscription_page/view/subscription_view.dart';
 
 import 'app_routes.dart';
 
@@ -380,6 +382,13 @@ class AppPages {
       name: AppRoutes.referralPage,
       page: () => const ReferralView(),
       binding: ReferralBinding(),
+    ),
+
+    // >>>>> >>>>> >>>>> Subscription Pages <<<<< <<<<< <<<<<
+    GetPage(
+      name: AppRoutes.subscriptionPage,
+      page: () => const SubscriptionView(),
+      binding: SubscriptionBinding(),
     ),
   ];
 }

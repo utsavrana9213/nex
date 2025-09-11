@@ -59,7 +59,7 @@ dependencies:
   # ✅ Latest with Flutter v2+ embedding only
 #  mobile_scanner: ^6.0.3      # ✅ Stable release that avoids Kotlin/data bugs
   date_picker_plus:
-  http:
+  http: ^1.2.2
   svgaplayer_flutter:
   in_app_purchase_android:
   in_app_purchase_storekit:

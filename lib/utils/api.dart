@@ -5,6 +5,7 @@ abstract class Api {
   // static const secretKey = "Enter Your Secret Key"; // Ex :- ssf45sd1fs5d1sdf1s56165s15sdf1s
 
   static const baseUrl = "https://appadmin.wowapp.app/"; // Ex :- http://182.168.19.35:5000/
+  // static const baseUrl = "http://192.168.1.4:5001/";
   static const secretKey = "5TIvw5cpc0"; // Ex :- ssf45sd1fs5d1sdf1s56165s15sdf1s
 
   // >>>>> >>>>> Admin Setting Api <<<<< <<<<<
